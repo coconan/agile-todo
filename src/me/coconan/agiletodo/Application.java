@@ -1,6 +1,8 @@
 package me.coconan.agiletodo;
 
 import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * mkdir -p out
@@ -28,10 +30,27 @@ public class Application {
         // read file content
         try {
             BufferedReader reader = new BufferedReader(new FileReader(events));
-            System.out.println(reader.readLine());
+            String line = reader.readLine();
+            System.out.println(line);
+
+            // parse event
+            Event event = parse(line);
+            System.out.println(event.getStart());
+            System.out.println(event.getEnd());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    private static Event parse(String line) {
+        String[] parts = line.split("  ");
+        String timeInterval = parts[0].substring(2);
+        String[] timeParts = timeInterval.split(" - ");
+        String start = timeParts[0];
+        String end = timeParts[1];
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime startDateTime = LocalDateTime.parse(start, dateTimeFormatter);
+        LocalDateTime endDateTime = LocalDateTime.parse(end, dateTimeFormatter);
+        return new Event(startDateTime, endDateTime);
+    }
 }
