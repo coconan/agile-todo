@@ -3,6 +3,9 @@ package me.coconan.agiletodo;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * mkdir -p out
@@ -30,13 +33,18 @@ public class Application {
         // read file content
         try {
             BufferedReader reader = new BufferedReader(new FileReader(events));
-            String line = reader.readLine();
-            System.out.println(line);
+            List<Event> eventList = new ArrayList<>();
+            while (true) {
+                String line = reader.readLine();
+                if (line == null) {
+                    break;
+                }
 
-            // parse event
-            Event event = parse(line);
-            System.out.println(event.getStart());
-            System.out.println(event.getEnd());
+                // parse event
+                Event event = parse(line);
+                eventList.add(event);
+            }
+            System.out.println(count(eventList));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -52,5 +60,13 @@ public class Application {
         LocalDateTime startDateTime = LocalDateTime.parse(start, dateTimeFormatter);
         LocalDateTime endDateTime = LocalDateTime.parse(end, dateTimeFormatter);
         return new Event(startDateTime, endDateTime);
+    }
+
+    private static int count(List<Event> eventList) {
+        int totalInMinute = 0;
+        for (Event event : eventList) {
+            totalInMinute += ChronoUnit.MINUTES.between(event.getEnd(), event.getStart());
+        }
+        return totalInMinute;
     }
 }
