@@ -26,7 +26,12 @@ public class Application {
         }
 
         // find spring events.md
-        File events = new File(directory + "/pearls/spring/events.md");
+        processEvents(directory + "/pearls/spring/events.md");
+        processEvents(directory + "/pearls/aup/events.md");
+    }
+
+    private static void processEvents(String filePath) {
+        File events = new File(filePath);
         System.out.println(events.getAbsolutePath());
         System.out.println("exists: " + events.exists());
 
@@ -44,7 +49,7 @@ public class Application {
                 Event event = parse(line);
                 eventList.add(event);
             }
-            System.out.println(count(eventList));
+            System.out.println(events.getAbsolutePath() + ": " + count(eventList));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -65,7 +70,7 @@ public class Application {
     private static int count(List<Event> eventList) {
         int totalInMinute = 0;
         for (Event event : eventList) {
-            totalInMinute += ChronoUnit.MINUTES.between(event.getEnd(), event.getStart());
+            totalInMinute += ChronoUnit.MINUTES.between(event.getStart(), event.getEnd());
         }
         return totalInMinute;
     }
