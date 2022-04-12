@@ -68,10 +68,14 @@ public class Application {
         return new Event(startDateTime, endDateTime);
     }
 
-    private static int count(List<Event> eventList) {
-        int totalInMinute = 0;
+    private static long count(List<Event> eventList) {
+        long totalInMinute = 0L;
         for (Event event : eventList) {
-            totalInMinute += ChronoUnit.MINUTES.between(event.getStart(), event.getEnd());
+            long duration = ChronoUnit.MINUTES.between(event.getStart(), event.getEnd());
+            if (duration < 0) {
+                throw new RuntimeException("");
+            }
+            totalInMinute += duration;
         }
         return totalInMinute;
     }
