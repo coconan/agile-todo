@@ -22,37 +22,38 @@ public class Application {
         // list directory files
         File dir = new File(directory);
         for (String filename : dir.list()) {
-            System.out.println(filename);
+            File target = new File(directory + "/" + filename);
+            if (target.isDirectory()) {
+                File events = new File(target.getAbsolutePath() + "/events.md");
+                if (events.exists()) {
+                    try {
+                        processEvents(target.getAbsolutePath() + "/events.md");
+                    } catch (Exception e) {
+                        System.out.println(target.getAbsolutePath() + "/events.md" + ": 1 error");
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
-
-        // find spring events.md
-        processEvents(directory + "/pearls/spring/events.md");
-        processEvents(directory + "/pearls/aup/events.md");
     }
 
-    private static void processEvents(String filePath) {
+    private static void processEvents(String filePath) throws IOException {
         File events = new File(filePath);
-        System.out.println(events.getAbsolutePath());
-        System.out.println("exists: " + events.exists());
 
         // read file content
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(events));
-            List<Event> eventList = new ArrayList<>();
-            while (true) {
-                String line = reader.readLine();
-                if (line == null) {
-                    break;
-                }
-
-                // parse event
-                Event event = parse(line);
-                eventList.add(event);
+        BufferedReader reader = new BufferedReader(new FileReader(events));
+        List<Event> eventList = new ArrayList<>();
+        while (true) {
+            String line = reader.readLine();
+            if (line == null || line.trim().isEmpty()) {
+                break;
             }
-            System.out.println(events.getAbsolutePath() + ": " + count(eventList));
-        } catch (IOException e) {
-            e.printStackTrace();
+
+            // parse event
+            Event event = parse(line);
+            eventList.add(event);
         }
+        System.out.println(events.getAbsolutePath() + ": " + count(eventList));
     }
 
     private static Event parse(String line) {
