@@ -53,7 +53,7 @@ public class Application {
             Event event = parse(line);
             eventList.add(event);
         }
-        System.out.println(events.getAbsolutePath() + ": " + count(eventList));
+        System.out.printf("%-70s %10d\n", events.getAbsolutePath() + ":", count(eventList));
     }
 
     private static Event parse(String line) {
