@@ -54,7 +54,8 @@ public class Application {
             Event event = parse(line);
             eventList.add(event);
         }
-        System.out.printf("%-64s %10s\n", events.getAbsolutePath() + ":", count(eventList));
+        Stats stats = count(eventList);
+        System.out.printf("%-64s %8d %+5d\n", events.getAbsolutePath() + ":", stats.getTotal(), stats.getToday());
     }
 
     private static Event parse(String line) {
@@ -69,7 +70,7 @@ public class Application {
         return new Event(startDateTime, endDateTime);
     }
 
-    private static String count(List<Event> eventList) {
+    private static Stats count(List<Event> eventList) {
         long totalInMinute = 0L;
         long todayMinute = 0L;
         for (Event event : eventList) {
@@ -82,6 +83,6 @@ public class Application {
                 todayMinute += duration;
             }
         }
-        return totalInMinute + " +" + todayMinute;
+        return new Stats(totalInMinute, todayMinute);
     }
 }
