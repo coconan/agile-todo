@@ -4,6 +4,7 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,15 +69,19 @@ public class Application {
         return new Event(startDateTime, endDateTime);
     }
 
-    private static long count(List<Event> eventList) {
+    private static String count(List<Event> eventList) {
         long totalInMinute = 0L;
+        long todayMinute = 0L;
         for (Event event : eventList) {
             long duration = ChronoUnit.MINUTES.between(event.getStart(), event.getEnd());
             if (duration < 0) {
                 throw new RuntimeException("");
             }
             totalInMinute += duration;
+            if (event.getEnd().isAfter(LocalDateTime.now().truncatedTo(ChronoUnit.DAYS))) {
+                todayMinute += duration;
+            }
         }
-        return totalInMinute;
+        return totalInMinute + " +" + todayMinute;
     }
 }
