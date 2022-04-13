@@ -3,8 +3,8 @@ package me.coconan.agiletodo;
 import java.time.LocalDateTime;
 
 public class Event {
-    private LocalDateTime start;
-    private LocalDateTime end;
+    private final LocalDateTime start;
+    private final LocalDateTime end;
 
     public Event(LocalDateTime start, LocalDateTime end) {
         this.start = start;
