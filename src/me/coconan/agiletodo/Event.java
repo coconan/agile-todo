@@ -25,7 +25,7 @@ public class Event {
     }
 
     public boolean isCurrentWeek() {
-        long deltaDay = ChronoUnit.DAYS.between(LocalDateTime.now(), getEnd().plus(1, ChronoUnit.WEEKS));
-        return 0 < deltaDay && deltaDay < 7;
+        long deltaDay = ChronoUnit.DAYS.between(getEnd(), LocalDateTime.now());
+        return 0 <= deltaDay && deltaDay <= ((LocalDateTime.now().getDayOfWeek().getValue() % 7) - (getEnd().getDayOfWeek().getValue() % 7));
     }
 }
