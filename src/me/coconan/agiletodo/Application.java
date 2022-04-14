@@ -16,6 +16,12 @@ import java.util.List;
 public class Application {
 
     public static void main(String[] args) {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime startDateTime = LocalDateTime.parse("2022-04-13 10:00", dateTimeFormatter);
+        System.out.println(startDateTime.format(dateTimeFormatter));
+        System.out.println(startDateTime.plus(1,ChronoUnit.WEEKS).format(dateTimeFormatter));
+        System.out.println(LocalDateTime.now().format(dateTimeFormatter));
+        System.out.println(ChronoUnit.DAYS.between(LocalDateTime.now(), startDateTime.plus(1, ChronoUnit.WEEKS)));
         // get input directory
         String directory = args[0];
         System.out.printf("directory: %s\n", directory);
@@ -55,7 +61,11 @@ public class Application {
             eventList.add(event);
         }
         Stats stats = count(eventList);
-        System.out.printf("%-64s %8d %+5d\n", events.getAbsolutePath() + ":", stats.getTotal(), stats.getToday());
+        System.out.printf("%-64s %8d %+5d", events.getAbsolutePath() + ":", stats.getTotal(), stats.getToday());
+        for (Long count : stats.getWeek()) {
+            System.out.printf("%5d", count);
+        }
+        System.out.println();
     }
 
     private static Event parse(String line) {
@@ -74,7 +84,7 @@ public class Application {
         long totalInMinute = 0L;
         long todayMinute = 0L;
         for (Event event : eventList) {
-            long duration = ChronoUnit.MINUTES.between(event.getStart(), event.getEnd());
+            long duration = event.getDuration();
             if (duration < 0) {
                 throw new RuntimeException("");
             }
@@ -83,6 +93,14 @@ public class Application {
                 todayMinute += duration;
             }
         }
-        return new Stats(totalInMinute, todayMinute);
+        Stats stats = new Stats(totalInMinute, todayMinute);
+
+        for (Event event : eventList) {
+            if (event.isCurrentWeek()) {
+                stats.addWeekItem(event.getEnd().getDayOfWeek().getValue() % 7, event.getDuration());
+            }
+        }
+
+        return stats;
     }
 }
