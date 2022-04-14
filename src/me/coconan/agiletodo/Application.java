@@ -16,12 +16,6 @@ import java.util.List;
 public class Application {
 
     public static void main(String[] args) {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        LocalDateTime startDateTime = LocalDateTime.parse("2022-04-13 10:00", dateTimeFormatter);
-        System.out.println(startDateTime.format(dateTimeFormatter));
-        System.out.println(startDateTime.plus(1,ChronoUnit.WEEKS).format(dateTimeFormatter));
-        System.out.println(LocalDateTime.now().format(dateTimeFormatter));
-        System.out.println(ChronoUnit.DAYS.between(LocalDateTime.now(), startDateTime.plus(1, ChronoUnit.WEEKS)));
         // get input directory
         String directory = args[0];
         System.out.printf("directory: %s\n", directory);
