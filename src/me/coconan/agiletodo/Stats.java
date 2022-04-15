@@ -26,10 +26,10 @@ public class Stats {
     }
 
     public void addWeekItem(int index, long count) {
-        this.week.set(index, count);
+        week.set(index, count + week.get(index));
     }
 
     public List<Long> getWeek() {
-        return this.week;
+        return week;
     }
 }
