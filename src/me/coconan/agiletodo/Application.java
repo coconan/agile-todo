@@ -1,11 +1,14 @@
 package me.coconan.agiletodo;
 
 import java.io.*;
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * AgileTodo
@@ -18,7 +21,11 @@ public class Application {
     public static void main(String[] args) {
         // get input directory
         String directory = args[0];
-        System.out.printf("directory: %s\n", directory);
+        System.out.printf("%-64s %8s %5s", "directory: " + directory, "total", "today");
+        for (int i = 0; i < 7; i++) {
+            System.out.printf("%5s", DayOfWeek.of(i == 0 ? 7 : i).getDisplayName(TextStyle.SHORT, Locale.US));
+        }
+        System.out.println();
 
         // list directory files
         File dir = new File(directory);
