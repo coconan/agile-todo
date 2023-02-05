@@ -37,7 +37,8 @@ public class Application {
                 if (events.exists()) {
                     try {
                         List<Event> eventList = processEvents(target.getAbsolutePath() + "/events.md");
-                        if ("status".equals(args[1])) {
+                        if ("stats".equals(args[1])) {
+                            eventList = eventList.stream().filter(event -> event.getStatus() == Event.Status.DONE).collect(Collectors.toList());
                             Stats stats = count(eventList);
                             System.out.printf("%-64s %8d %+5d", events.getAbsolutePath() + ":", stats.getTotal(), stats.getToday());
                             for (Long count : stats.getWeek()) {
