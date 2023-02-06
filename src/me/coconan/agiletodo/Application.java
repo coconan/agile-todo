@@ -111,7 +111,7 @@ public class Application {
         for (Event event : eventList) {
             long duration = event.getDuration();
             if (duration < 0) {
-                throw new RuntimeException("");
+                throw new RuntimeException("duration of a event must be greater than 0");
             }
             totalInMinute += duration;
             if (event.getEnd().isAfter(LocalDateTime.now().truncatedTo(ChronoUnit.DAYS))) {
